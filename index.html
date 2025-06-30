@@ -1,0 +1,121 @@
+<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
+<script>
+AFRAME.registerComponent('videohandler', {
+    init: function () {
+        var marker = this.el;
+        var videos = document.querySelectorAll("video");  // 모든 video 요소를 선택
+
+        marker.addEventListener('markerFound', function () {
+            console.log("Video Start");
+            videos.forEach(function(video) {
+                video.load();  // 비디오 로드
+                video.play();  // 비디오 재생
+            });
+        });
+
+        marker.addEventListener('markerLost', function () {
+            console.log("Video Stop");
+            videos.forEach(function(video) {
+                video.pause();  // 비디오 정지
+                video.currentTime = 0;  // 비디오 시작으로 되돌리기
+            });
+        });
+    }
+});
+
+    AFRAME.registerComponent('soundhandler', {
+        init: function () {
+            var marker = this.el;
+            var sound = document.querySelector("#sound1");
+
+            marker.addEventListener('markerFound', function () {
+                console.log("Sound Start");
+                sound.play();
+            });
+
+            marker.addEventListener('markerLost', function () {
+                console.log("Sound Stop");
+                sound.pause();
+                sound.currentTime = 0;
+            });
+        }
+    });
+</script>
+
+<style>
+  .arjs-loader {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+  }
+</style>
+<body style="margin: 0px; overflow: hidden">
+  <!-- minimal loader shown until image descriptors are loaded -->
+  <div class="arjs-loader">
+    <div>명함 사진을 인식해주세요</div>
+  </div>
+<a-scene
+    cursor="rayOrigin: mouse"
+    vr-mode-ui="enabled: false;"
+    renderer="logarithmicDepthBuffer: true; precision: high; antialias: true; alpha: true;pixelRatio: 2;preserveDrawingBuffer: true;"
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_rgbd; filterMinCF: 0.95; filterBeta: 0.5; canvasWidth: 1920; canvasHeight: 1080;"
+    embedded
+    gesture-detector
+    id="scene">
+    
+ <a-assets>
+        <audio id="sound1" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp3/Guilty of Being Innocent of Being Jack Sparrow - Pirates Of The Caribbean 4.mp3" preload="auto"></audio>
+        <audio id="sound2" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp3/Hoist The Colors - Hans Zimmer.mp3" preload="auto"></audio>
+        <audio id="sound3" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp3/The Medallion Calls - Pirates of the Caribbean.mp3" preload="auto"></audio>
+        <audio id="sound4" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp3/Up Is Down - Hans Zimmer.mp3" preload="auto"></audio>
+        <video id="video1" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp4/2f2.mp4" preload="auto" response-type="arraybuffer" loop crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video2" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp4/4f.mp4" preload="auto" response-type="arraybuffer" loop crossorigin webkit-playsinline autoplay muted playsinline></video>
+         <video id="video3" src="https://raw.githubusercontent.com/hospitalVIP/jack2/main/mp4/4f2.mp4" preload="auto" response-type="arraybuffer" loop crossorigin webkit-playsinline autoplay muted playsinline></video>
+
+    </a-assets>
+ <!-- scale 의 가로 세로 두께 position 양옆 깊이 높이 rotation 앞뒤 회전 -->
+    <!-- 사진 1번 -->
+    <a-nft soundhandler type="nft" url="https://raw.githubusercontent.com/hospitalVIP/jack2/main/nft/1f/1f">
+        <a-entity gltf-model="모델링" scale="3 3 3" position="180 -50 -250" class="clickable" gesture-handler="minScale: 0.25; maxScale: 10"></a-entity>
+        <a-entity sound="src: #sound1; autoplay: true"></a-entity>
+    </a-nft>
+    
+    <!-- 사진 2번 (동영상 포함) -->
+ <a-nft soundhandler type="nft" url="https://raw.githubusercontent.com/hospitalVIP/jack2/main/nft/2f/2f">
+        <a-video src="#video1" scale="154.7 257.4 1" position="55 -50 -300" rotation="-90 0 0" static-body></a-video>
+        <a-entity sound="src: #sound2; autoplay: true"></a-entity>
+    </a-nft>
+    
+    <!-- 사진 3번 -->
+    <a-nft soundhandler type="nft" url="https://raw.githubusercontent.com/hospitalVIP/jack2/main/nft/3f/3f">
+      <a-box position="0 0.5 0" material="color: black;" soundhandler></a-box> 
+      <a-entity gltf-model="https://raw.githubusercontent.com/hospitalVIP/jack2/main/model/black pearl.glb" scale="3 3 3" position="180 -50 -250" class="clickable" gesture-handler="minScale: 0.25; maxScale: 10"></a-entity>
+        <a-entity sound="src: #sound3; autoplay: true"></a-entity>
+    </a-nft>
+    
+    
+    <!-- 사진 4번 -->
+   <a-nft soundhandler type="nft" url="https://raw.githubusercontent.com/hospitalVIP/jack2/main/nft/4f/4f">
+      <a-video src="#video2" scale="77 129 1" position="15 -50 -365" rotation="-90 0 0" static-body></a-video>
+      <a-video src="#video3" scale="77 129 1" position="125 -50 -365" rotation="-90 0 0" static-body></a-video>
+        <a-entity sound="src: #sound4; autoplay: true"></a-entity>
+    </a-nft>
+
+
+<a-entity camera></a-entity>
+</a-scene>
+</body>
